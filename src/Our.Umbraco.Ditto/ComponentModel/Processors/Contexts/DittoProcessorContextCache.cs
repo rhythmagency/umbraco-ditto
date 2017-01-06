@@ -45,9 +45,9 @@ namespace Our.Umbraco.Ditto
         /// <param name="propertyDescriptor">The property descriptor.</param>
         /// <param name="culture">The culture.</param>
         public DittoProcessorContextCache(
-            IPublishedContent content, 
-            Type targetType, 
-            PropertyDescriptor propertyDescriptor, 
+            IPublishedContent content,
+            Type targetType,
+            PropertyDescriptor propertyDescriptor,
             CultureInfo culture)
         {
             this.content = content;
@@ -67,10 +67,10 @@ namespace Our.Umbraco.Ditto
         /// <param name="culture">The culture.</param>
         /// <param name="contexts">The contexts.</param>
         public DittoProcessorContextCache(
-            IPublishedContent content, 
-            Type targetType, 
-            PropertyDescriptor propertyDescriptor, 
-            CultureInfo culture, 
+            IPublishedContent content,
+            Type targetType,
+            PropertyDescriptor propertyDescriptor,
+            CultureInfo culture,
             IEnumerable<DittoProcessorContext> contexts)
             : this(content, targetType, propertyDescriptor, culture)
         {
@@ -111,9 +111,18 @@ namespace Our.Umbraco.Ditto
         public DittoProcessorContext GetOrCreateContext(Type contexType)
         {
             return this.lookup.GetOrAdd(
-                contexType, 
+                contexType,
                 type => ((DittoProcessorContext)contexType.GetInstance())
                     .Populate(this.content, this.targetType, this.propertyDescriptor, this.culture));
+        }
+
+        /// <summary>
+        /// Gets the contexts in cache
+        /// </summary>
+        /// <returns></returns>
+        public ICollection<DittoProcessorContext> GetCachedContexts()
+        {
+            return this.lookup.Values;
         }
     }
 }

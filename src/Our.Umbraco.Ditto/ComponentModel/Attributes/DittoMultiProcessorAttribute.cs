@@ -49,11 +49,8 @@ namespace Our.Umbraco.Ditto
 
             foreach (var processorAttr in this.Attributes)
             {
-                // Get the right context type
-                var newCtx = ctx.ContextCache.GetOrCreateContext(processorAttr.ContextType);
-
-                // Process value
-                this.Value = processorAttr.ProcessValue(this.Value, newCtx);
+                // Process value, Pass MultiProcessor as context
+                this.Value = processorAttr.ProcessValue(this.Value, ctx);
             }
 
             return this.Value;

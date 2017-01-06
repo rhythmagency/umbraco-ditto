@@ -81,10 +81,10 @@ namespace Our.Umbraco.Ditto
                     // the same checks, it's just that these results don't get cached :(
                     types = baseType.Assembly
                         .GetTypes()
-                        .Where(t => baseType.IsAssignableFrom(t) 
-                            && t.IsClass 
-                            && !t.IsAbstract 
-                            && !t.IsSealed 
+                        .Where(t => baseType.IsAssignableFrom(t)
+                            && t.IsClass
+                            && !t.IsAbstract
+                            && !t.IsSealed
                             && !t.IsNestedPrivate
                             && t.GetCustomAttribute<HideFromTypeFinderAttribute>(true) == null)
                              .ToArray();
@@ -109,7 +109,15 @@ namespace Our.Umbraco.Ditto
                     var typeName = this.ResolveTypeName(x);
                     var type = types.FirstOrDefault(y => y.Name.InvariantEquals(typeName));
 
-                    return type != null ? x.As(type) : null;
+                    // pass cached contexts into processorContexts
+                    var processorContexts = new[] { this.Context };
+                    if (this.Context is DittoMultiProcessorContext)
+                    {
+                        var temp = this.Context as DittoMultiProcessorContext;
+                        processorContexts = temp.ContextCache.GetCachedContexts().ToArray();
+                    }
+
+                    return type != null ? x.As(type, processorContexts: processorContexts) : null;
                 });
 
                 return EnumerableInvocations.Cast(baseType, items);

@@ -484,8 +484,8 @@ namespace Our.Umbraco.Ditto
             // Create holder for value as it's processed
             object currentValue = content;
 
-            // Create a processor context cache
-            var processorContextsCache = new DittoProcessorContextCache(content, targetType, propertyDescriptor, culture);
+            // Create a processor context cache including processor contexts
+            var processorContextsCache = new DittoProcessorContextCache(content, targetType, propertyDescriptor, culture, processorContexts);
 
             // Add a multi processor context by default
             processorContextsCache.AddContext(new DittoMultiProcessorContext { ContextCache = processorContextsCache });
