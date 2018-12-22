@@ -50,7 +50,12 @@ namespace Our.Umbraco.Ditto
                 ActionCache[key] = a;
             }
 
-            a(instance, value);
+            try {
+                a(instance, value);
+            }
+            catch (Exception ex) {
+                throw new Exception($"Caught exception while setting object property. Object type: {instance.GetType().FullName}. Property name: {property.Name}. Property type: {property.PropertyType.FullName}. Value type: {value?.GetType().FullName ?? "null"}. Value: {value?.ToString() ?? "null"}.", ex);
+            }
         }
 
         /// <summary>
